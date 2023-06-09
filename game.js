@@ -1,6 +1,19 @@
+import four_letters from './word_files/four_letters.json' assert { type: 'json' };
+import five_letters from './word_files/five_letters.json' assert { type: 'json' };
+import three_letters from './word_files/three_letters.json' assert { type: 'json' };
+
+
 const boxes = Array.from(document.querySelectorAll('.box'));
 
-const word = 'WORD';
+const words = four_letters['words'];
+
+function randomWord() {
+    return words[Math.floor(Math.random() * words.length)];
+}
+
+
+const word = randomWord().toUpperCase();
+console.log(word)
 let guessWord = ''
 let guessCount = 1;
 
@@ -23,11 +36,6 @@ document.addEventListener('keyup', (event) => {
 
         guessWord = '';
         guessCount += 1;
-
-        // if(checkWin()) {
-        //     return;
-        // }
-
     }
 
     
@@ -51,10 +59,6 @@ document.addEventListener('keyup', (event) => {
         activeBox.classList.remove('selected');
         boxes[pos+1].classList.add('selected');
     }
-
-    
-
-
 })
 
 function getActiveBox(box, index) {
@@ -74,13 +78,19 @@ function eraseLetter() {
 
 function changeBoxColor() {
     const currentActiveIndex = boxes.findIndex(getActiveBox) + 1;
-    const previousBoxes = [...boxes].splice((guessCount * 4) - 4, currentActiveIndex);
-    console.log(previousBoxes);
+    const previousBoxes = [...boxes].slice((guessCount * 4) - 4, currentActiveIndex);
+    
     previousBoxes.forEach((box, ind) => {
         console.log(box.innerText,'    ', word[ind]);
         if(box.innerText === word[ind]) {
             box.style.color = 'white';
             box.style.backgroundColor = 'green';
+        } else if(word.includes(box.innerText)) {
+            box.style.color = 'white';
+            box.style.backgroundColor = '#d4bc22';
+        } else {
+            box.style.color = 'white';
+            box.style.backgroundColor = '#292929';
         }
     })
 }
