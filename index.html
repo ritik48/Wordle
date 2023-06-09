@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <style>
+        :root {
+            font-size: 10px;
+
+            --box-size: 50px;
+        }
+        * {
+            box-sizing: border-box;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            padding: 0;
+            margin: 0;
+        }
+        *::after, *::before {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            background-color: rgb(0, 0, 0);
+        }
+        h2 {
+            color: rgb(255, 145, 0);
+            text-align: center;
+            font-size: 3rem;
+            
+            margin: 20px;
+        }
+        .box-container {
+            display: grid;
+
+            margin: 0 auto;
+
+            grid-template-columns: repeat(4, var(--box-size));
+            gap: 10px;
+            justify-content: center;
+
+            
+        }
+        .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: var(--box-size);
+            height: var(--box-size);
+
+            box-shadow: 0 0 2px 0px rgb(164, 162, 162);
+            color: white;
+
+            font-size: 2.5rem;
+            border-radius: 5px;
+        }
+        .box.selected {
+            box-shadow: 0 0 4px 0px rgb(186, 183, 32);
+        }
+    </style>
+</head>
+<body>
+    <h2>Wordle</h2>
+    <main>
+        <div class="box-container">
+            <div class="box selected"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </main>
+    <script src="game.js"></script>
+</body>
+</html>
