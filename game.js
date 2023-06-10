@@ -4,6 +4,7 @@ import three_letters from './word_files/three_letters.json' assert { type: 'json
 
 
 const boxes = Array.from(document.querySelectorAll('.box'));
+const keys = document.querySelectorAll('.key');
 const popup = document.querySelector('.popup');
 
 let paused = false;
@@ -22,6 +23,33 @@ let guessCount = 1;
 
 let score = 12;
 
+
+keys.forEach((key) => {
+    key.addEventListener('click', (e) => {
+        
+        const letter = e.target.innerText;
+
+        if(paused) return;
+
+        if(letter === '←') {
+            eraseLetter();
+
+            return;
+        }
+
+        if(letter == 'Enter') {
+            if(guessWord.length !== 4) return;
+
+            changeBoxColor();
+            checkWin();
+
+            return;
+        }
+
+        insertLetter(letter);
+    })
+})
+
 document.addEventListener('keyup', (event) => {
     
     if(paused) return;
@@ -34,18 +62,18 @@ document.addEventListener('keyup', (event) => {
         if(guessWord.length !== 4) return;
 
         changeBoxColor();
-        if(checkWin()) return;
+        checkWin();
 
-        const currentActiveInd = boxes.findIndex(getActiveBox);
-        boxes[currentActiveInd].classList.remove('selected');
+        // const currentActiveInd = boxes.findIndex(getActiveBox);
+        // boxes[currentActiveInd].classList.remove('selected');
 
-        const activeInd = guessCount * 4;
-        boxes[activeInd].classList.add('selected');
+        // const activeInd = guessCount * 4;
+        // boxes[activeInd].classList.add('selected');
 
-        guessWord = '';
-        guessCount += 1;
+        // guessWord = '';
+        // guessCount += 1;
 
-        score -= 2;
+        // score -= 2;
     }
 
     
@@ -53,22 +81,7 @@ document.addEventListener('keyup', (event) => {
         return;
     }
 
-    const pos = boxes.findIndex(getActiveBox);
-    const activeBox = boxes[pos];
-    
-    activeBox.innerText = event.key.toUpperCase();
-
-    if(guessWord.length === word.length) {
-        guessWord = guessWord.substring(0, guessWord.length-1);
-    }
-
-    guessWord += event.key.toUpperCase();
-   
-    if(guessWord.length !== word.length)
-    {
-        activeBox.classList.remove('selected');
-        boxes[pos+1].classList.add('selected');
-    }
+    insertLetter(event.key.toUpperCase());
 })
 
 function getActiveBox(box, index) {
@@ -130,7 +143,36 @@ function checkWin() {
 
         return true;
     }
-    return false;
+    const currentActiveInd = boxes.findIndex(getActiveBox);
+    boxes[currentActiveInd].classList.remove('selected');
+
+    const activeInd = guessCount * 4;
+    boxes[activeInd].classList.add('selected');
+
+    guessWord = '';
+    guessCount += 1;
+
+    score -= 2;
+    
+}
+
+function insertLetter(key) {
+    const pos = boxes.findIndex(getActiveBox);
+    const activeBox = boxes[pos];
+    
+    activeBox.innerText = key;
+
+    if(guessWord.length === word.length) {
+        guessWord = guessWord.substring(0, guessWord.length-1);
+    }
+
+    guessWord += key;
+   
+    if(guessWord.length !== word.length)
+    {
+        activeBox.classList.remove('selected');
+        boxes[pos+1].classList.add('selected');
+    }
 }
 
 
