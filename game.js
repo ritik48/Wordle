@@ -108,12 +108,32 @@ function changeBoxColor() {
         if(box.innerText === word[ind]) {
             box.style.color = 'white';
             box.style.backgroundColor = 'green';
+
+            keys.forEach((k) => {
+                if(k.innerText === word[ind]) {
+                    k.style.backgroundColor = 'green';
+                }
+            })
+
         } else if(word.includes(box.innerText)) {
             box.style.color = 'white';
             box.style.backgroundColor = '#d4bc22';
+
+            keys.forEach((k) => {
+                if(box.innerText === k.innerText) {
+                    k.style.backgroundColor = '#d4bc22';
+                }
+            })
         } else {
             box.style.color = 'white';
             box.style.backgroundColor = '#292929';
+
+            keys.forEach((k) => {
+                if(box.innerText === k.innerText) {
+                    k.style.backgroundColor = '#292929';
+                }
+            })
+            
         }
     })
 }
