@@ -4,6 +4,9 @@ import three_letters from './word_files/three_letters.json' assert { type: 'json
 
 
 const boxes = Array.from(document.querySelectorAll('.box'));
+const popup = document.querySelector('.popup');
+
+let paused = false;
 
 const words = four_letters['words'];
 
@@ -17,7 +20,12 @@ console.log(word)
 let guessWord = ''
 let guessCount = 1;
 
+let score = 12;
+
 document.addEventListener('keyup', (event) => {
+    
+    if(paused) return;
+
     if(event.key == 'Backspace'){
         eraseLetter();
     }
@@ -36,6 +44,8 @@ document.addEventListener('keyup', (event) => {
 
         guessWord = '';
         guessCount += 1;
+
+        score -= 2;
     }
 
     
@@ -99,23 +109,40 @@ function checkWin() {
     if(guessWord === word) {
         console.log('You Won !!!');
 
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //     location.reload();
+        // }, 1000);
+
+        paused = true
+        showPopup('You Won !!!', `Score : ${score}`);
         
         return true;
     }
     if(guessCount == 6) {
         console.log('You lost :(');
-        
 
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //     location.reload();
+        // }, 1000);
+
+        paused = true;
+        showPopup('You Lost :(', `The correct word was ${word}`);
 
         return true;
     }
     return false;
 }
+
+
+function showPopup(title, message) {
+    popup.querySelector('h2').innerText = title;
+    popup.querySelector('p').innerText = message;
+
+    popup.style.transform = 'scale(1)';
+}
+
+document.querySelector('button.play').addEventListener('click', (e) => {
+    location.reload();
+})
 
 

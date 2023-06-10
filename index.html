@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,27 +12,45 @@
 
             --box-size: 50px;
         }
+
         * {
             box-sizing: border-box;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
             padding: 0;
             margin: 0;
         }
-        *::after, *::before {
+
+        *::after,
+        *::before {
             box-sizing: border-box;
             padding: 0;
             margin: 0;
         }
+
         body {
             background-color: rgb(0, 0, 0);
         }
+
         h2 {
+            font-size: 3rem;
+            color: white;
+        }
+
+        p {
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .title {
             color: rgb(255, 145, 0);
             text-align: center;
             font-size: 3rem;
-            
-            margin: 20px;
+
+            letter-spacing: 0.05em;
+
+            margin: 30px;
         }
+
         .box-container {
             display: grid;
 
@@ -40,9 +59,8 @@
             grid-template-columns: repeat(4, var(--box-size));
             gap: 10px;
             justify-content: center;
-
-            
         }
+
         .box {
             display: flex;
             justify-content: center;
@@ -57,13 +75,73 @@
             font-size: 2.5rem;
             border-radius: 5px;
         }
+
         .box.selected {
             box-shadow: 0 0 4px 0px rgb(186, 183, 32);
         }
+
+        .popup {
+            position: absolute;
+            background-color: rgba(84, 84, 84, 0.636);
+            inset: 0;
+
+            /* display: flex;
+            justify-content: center; */
+            /* align-items: center; */
+
+            transform: scale(0);
+
+            transition: 0.25s all ease-in-out;
+
+        }
+
+        .popup .container {
+            width: fit-content;
+            background-color: black;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+            align-items: center;
+
+            margin: 0 auto;
+
+            margin-top: 150px;
+
+            gap: 10px;
+            
+            padding: 20px 20px;
+            border-radius: 10px;
+
+            box-shadow: 0 0 5px 0 rgba(181, 178, 178, 0.629);
+
+            /* margin: 0px auto; */
+        }
+
+        .popup .container button {
+            border: none;
+
+            font-size: 2rem;
+
+            padding: 0.25em 0.75em;
+
+            border-radius: 5px;
+
+            background-color: aqua;
+            cursor: pointer;
+
+            transition: 0.2s all ease-in-out;
+        }
+        .popup .container button:hover {
+            background-color: rgb(12, 131, 131);
+            color: white;
+        }
     </style>
 </head>
+
 <body>
-    <h2>Wordle</h2>
+    <h2 class="title">Wordle</h2>
     <main>
         <div class="box-container">
             <div class="box selected"></div>
@@ -92,6 +170,14 @@
             <div class="box"></div>
         </div>
     </main>
+    <div class="popup">
+        <div class="container">
+            <h2>You Won !!!</h2>
+            <p>Score : 18</p>
+            <button class="play">Play Again</button>
+        </div>
+    </div>
     <script type="module" src="game.js"></script>
 </body>
+
 </html>
