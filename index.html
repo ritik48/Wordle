@@ -48,6 +48,47 @@
             font-size: 1.8rem;
         }
 
+        .head {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+    
+        .head .timer {
+            position: relative;
+            
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+
+            --timer-value: '1:00';
+
+            box-shadow: inset 0px 0px 2px 1px rgb(104, 102, 102);
+
+            background: conic-gradient(rgb(236, 181, 15) 0deg, rgb(47, 45, 45) 0deg);
+        }
+
+        .timer .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background-color: rgb(0, 0, 0);
+
+            font-size: 1.5rem;
+        }
+
         .title {
             color: rgb(255, 145, 0);
             text-align: center;
@@ -55,7 +96,7 @@
 
             letter-spacing: 0.05em;
 
-            margin: 30px;
+            margin: 20px 0;
         }
 
         .box-container {
@@ -136,10 +177,12 @@
 
             transition: 0.2s all ease-in-out;
         }
+        
         .popup .container button:hover {
             background-color: rgb(12, 131, 131);
             color: white;
         }
+
         .key-container {
             display: flex;
             justify-content: center;
@@ -175,7 +218,14 @@
 </head>
 
 <body>
-    <h2 class="title">Wordle</h2>
+    <div class="head">
+        <div class="timer">
+            <div class="circle">1:00</div>
+        </div>
+        <h2 class="title">Wordle</h2>
+        <p class="setting">Setting</p>
+    </div>
+    
     <main>
         <div class="box-container">
             <div class="box selected"></div>
