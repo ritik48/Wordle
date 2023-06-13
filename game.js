@@ -146,6 +146,10 @@ function checkWin() {
 
         paused = true
         showPopup('You Won !!!', `Score : ${score}`);
+        
+        
+        const prevScore = parseInt(localStorage.getItem('score'));
+        localStorage.setItem('score', prevScore + score);
 
         return true;
     }
@@ -206,6 +210,18 @@ document.querySelector('button.play').addEventListener('click', (e) => {
     location.reload();
 })
 
+const showScores = () => {
+    const score = document.querySelector('.score')
+    
+    if(!localStorage.getItem('score')) {
+        localStorage.setItem('score', 0);
+    }
+    score.innerText = localStorage.getItem('score');
+    
+    
+}
+
+showScores()
 // start timer
 
 let countdown = 59;

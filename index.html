@@ -29,6 +29,11 @@
 
         body {
             background-color: rgb(0, 0, 0);
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
         }
 
         main {
@@ -96,7 +101,9 @@
 
             letter-spacing: 0.05em;
 
-            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(110, 109, 109, 0.733);
+
+            margin: 18px 0;
         }
 
         .box-container {
@@ -207,11 +214,55 @@
             background-color: #1b1b1b;
         }
 
+        .setting-btn img {
+            width: 40px;
+            height: 40px;
+
+            cursor: pointer;
+
+            transition: all 0.1s ease-in-out;
+        }
+
+        .setting-btn img:hover {
+            filter: brightness(0.5);
+            transform: scale(1.08);
+        }
+
+        footer {
+            padding: 6px 10px; 
+            margin-top: auto;
+
+            background-color: #1b1b1b;
+        }
+        footer p {
+            color: rgb(255, 205, 25);
+        }
+
         @media screen and (max-width: 700px) {
             .key-container {
                 width: 90%;
                 
               
+            }
+        }
+
+        @media screen and (min-width: 700px) and (max-width: 929px) {
+            .key-container {
+                width: 70%;
+            }
+        }
+        @media screen and (max-width: 519px) {
+            :root {
+                --box-size: 46px;
+            }
+            .key {
+                font-size: 1.7rem;
+            }
+            footer {
+                padding: 3px 10px;
+            }
+            footer p{
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -223,7 +274,12 @@
             <div class="circle">1:00</div>
         </div>
         <h2 class="title">Wordle</h2>
-        <p class="setting">Setting</p>
+        
+        
+        <div class="setting-btn">
+            <img src="./assets/setting.png" alt="">
+        </div>
+
     </div>
     
     <main>
@@ -284,6 +340,10 @@
             <div class="key">&larr;</div>
         </div>
     </main>
+
+    <footer>
+        <p>Score : <span class="score"></span></p>
+    </footer>
 
 
 
