@@ -230,7 +230,11 @@
 
         footer {
             padding: 6px 10px; 
-            margin-top: auto;
+            position: absolute;
+
+            bottom: 0;
+            left: 0;
+            right: 0;
 
             background-color: #1b1b1b;
         }
@@ -253,10 +257,10 @@
         }
         @media screen and (max-width: 519px) {
             :root {
-                --box-size: 43px;
+                --box-size: 45px;
             }
             .key {
-                font-size: 1.7rem;
+                font-size: 1.8rem;
             }
             footer {
                 padding: 3px 10px;

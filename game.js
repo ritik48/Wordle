@@ -6,6 +6,12 @@ import three_letters from './word_files/three_letters.json' assert { type: 'json
 const boxes = Array.from(document.querySelectorAll('.box'));
 const keys = document.querySelectorAll('.key');
 const popup = document.querySelector('.popup');
+const resetBtn = document.querySelector('.play');
+
+if(!localStorage.getItem('score')) {
+    localStorage.setItem('score', 0);
+}
+
 
 let paused = false;
 
@@ -16,7 +22,7 @@ function randomWord() {
 }
 
 
-const word = randomWord().toUpperCase();
+let word = randomWord().toUpperCase();
 console.log(word)
 let guessWord = ''
 let guessCount = 1;
@@ -52,26 +58,18 @@ keys.forEach((key) => {
 
 document.addEventListener('keyup', (event) => {
 
-    if (paused) return;
+    if (paused){
+        return;
+    }
 
     if (event.key == 'Backspace') eraseLetter();
-
+    
     if (event.key === 'Enter') {
+        
         if (guessWord.length !== 4) return;
 
         changeBoxColor();
         checkWin();
-
-        // const currentActiveInd = boxes.findIndex(getActiveBox);
-        // boxes[currentActiveInd].classList.remove('selected');
-
-        // const activeInd = guessCount * 4;
-        // boxes[activeInd].classList.add('selected');
-
-        // guessWord = '';
-        // guessCount += 1;
-
-        // score -= 2;
     }
 
 
@@ -144,12 +142,13 @@ function checkWin() {
 
         clearInterval(interval);
 
-        paused = true
+        paused = true;
         showPopup('You Won !!!', `Score : ${score}`);
-        
-        
-        const prevScore = parseInt(localStorage.getItem('score'));
-        localStorage.setItem('score', prevScore + score);
+
+        //update score
+
+        localStorage.setItem('score', score + parseInt(localStorage.getItem('score')));
+        showScores();
 
         return true;
     }
@@ -166,6 +165,7 @@ function checkWin() {
     }
     const currentActiveInd = boxes.findIndex(getActiveBox);
     boxes[currentActiveInd].classList.remove('selected');
+    console.log(boxes[currentActiveInd]);
 
     const activeInd = guessCount * 4;
     boxes[activeInd].classList.add('selected');
@@ -194,6 +194,10 @@ function insertLetter(key) {
     }
 }
 
+resetBtn.addEventListener('click', () => {
+    reset();
+})
+
 // show popup on win or loss
 
 function showPopup(title, message) {
@@ -204,33 +208,25 @@ function showPopup(title, message) {
 }
 
 
-// reset the game
-
-document.querySelector('button.play').addEventListener('click', (e) => {
-    location.reload();
-})
+// display score
 
 const showScores = () => {
-    const score = document.querySelector('.score')
-    
-    if(!localStorage.getItem('score')) {
-        localStorage.setItem('score', 0);
-    }
-    score.innerText = localStorage.getItem('score');
-    
-    
+    const scoreTag = document.querySelector('.score')
+    scoreTag.innerText = localStorage.getItem('score');
 }
 
 showScores()
 // start timer
 
-let countdown = 59;
 let interval = null;
+let countdown = 59;
 
 const startTimer = () => {
+    countdown = 59;
+
     const timer = document.querySelector('.timer');
     const timer_val = timer.querySelector('.circle');
-
+    timer_val.innerText = '1:00';
     
 
     interval = setInterval(() => {
@@ -241,7 +237,6 @@ const startTimer = () => {
 
 
         if (countdown < 0) {
-
             showPopup('Times up !!!', `The correct word was ${word}`);
 
             timer_val.innerText = `0:00`;
@@ -251,3 +246,35 @@ const startTimer = () => {
 }
 
 startTimer();
+
+// reset the game
+
+const reset = () => {
+    clearInterval(interval);
+    paused = false;
+
+    word = randomWord().toUpperCase();
+    console.log(word)
+    guessWord = ''
+    guessCount = 1;
+    score = 12;
+
+    popup.style.transform = 'scale(0)';
+
+    keys.forEach((k) => { 
+        k.style.backgroundColor = 'black';
+    })
+
+    boxes.forEach((box) => {
+        box.style.backgroundColor = 'black'
+        box.innerText = '';
+    })
+    boxes.forEach((box) => {
+        if(box.classList.contains('selected')) {
+            box.classList.remove('selected');
+        }
+    })
+
+    boxes[0].classList.add('selected');
+    startTimer();
+}
