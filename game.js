@@ -252,3 +252,13 @@ const startTimer = () => {
 
 startTimer();
 
+
+const setHeight = () => {
+    const currentHeight = window.innerHeight;
+    console.log(currentHeight);
+    document.body.style.height = `${currentHeight - 1}px`
+};
+
+window.addEventListener('resize', setHeight);
+setHeight();
+
