@@ -35,6 +35,7 @@ boxes[0].classList.add('selected');
 const keys = document.querySelectorAll('.key');
 const popup = document.querySelector('.popup');
 const resetBtn = document.querySelector('.play');
+const resetScore = document.querySelector('.reset-score');
 
 const increaseBtn = document.querySelector('.size-inc');
 const decreaseBtn = document.querySelector('.size-dec');
@@ -86,6 +87,13 @@ decreaseBtn.addEventListener('click', () => {
     reset();
 })
 
+resetScore.addEventListener('click', (e) => {
+    if(e.detail >= 1) {
+        document.querySelector('.high-score').innerText = 0;
+        localStorage.setItem('score', 0);
+    }
+});
+
 let paused = false;
 let settingIsOpen = false;
 let word = randomWord(word_size).toUpperCase();
@@ -94,6 +102,8 @@ let guessWord = ''
 let guessCount = 1;
 let score = 12;
 let high_score = parseInt(localStorage.getItem('score'));
+
+document.querySelector('.high-score').innerText = high_score;
 
 function randomWord(size) {
     let word_list = four_letters['words'];
@@ -293,7 +303,8 @@ const updateScores = () => {
     document.querySelector('.score').innerText = score;
 
     if(high_score < score) {
-        localStorage.setItem('score', score + parseInt(localStorage.getItem('score')));
+        localStorage.setItem('score', score);
+        document.querySelector('.high-score').innerText = localStorage.getItem('score');
         console.log('new high score = ',score);
     }
 }
@@ -309,6 +320,8 @@ const startTimer = () => {
     const timer = document.querySelector('.timer');
     const timer_val = timer.querySelector('.circle');
     timer_val.innerText = '1:00';
+
+    timer.style.background = `conic-gradient(rgb(236, 181, 15) 0deg, rgb(47, 45, 45) 0deg)`;
     
     interval = setInterval(() => {
         if(paused) return;
@@ -339,13 +352,19 @@ startTimer();
 const reset = () => {
     clearInterval(interval);
 
-    paused = false;
-    settingIsOpen = false;
+    if(settingIsOpen) {
+        paused = true;
+    } else {
+        paused = false;
+        settingIsOpen = false;
+    }
+
+    
     guessWord = ''
     guessCount = 1;
     score = 12;
     high_score = parseInt(localStorage.getItem('score'));
-
+    
     word_size = parseInt(localStorage.getItem('size'));
 
     word = randomWord(word_size).toUpperCase();
@@ -370,6 +389,7 @@ const reset = () => {
             box.classList.remove('selected');
         }
     })
+
     boxes[0].classList.add('selected');
 
     startTimer();
