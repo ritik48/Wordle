@@ -3,32 +3,108 @@ import five_letters from './word_files/five_letters.json' assert { type: 'json' 
 import three_letters from './word_files/three_letters.json' assert { type: 'json' };
 
 
-const boxes = Array.from(document.querySelectorAll('.box'));
-const keys = document.querySelectorAll('.key');
-const popup = document.querySelector('.popup');
-const resetBtn = document.querySelector('.play');
+const createBoxes = (size) => {
+    document.querySelector('.box-container').innerText = '';
+    for(let i=0;i<size*6; i++) {
+        const newBox = document.createElement('div')
+        newBox.classList.add('box');
+
+        document.querySelector('.box-container').append(newBox);
+    }
+    document.querySelector('.box-container').style.gridTemplateColumns = `repeat(${size}, var(--box-size))`;
+}
+
+// initialise score and size if not assigned
 
 if(!localStorage.getItem('score')) {
     localStorage.setItem('score', 0);
 }
 
-
-let paused = false;
-
-const words = four_letters['words'];
-
-function randomWord() {
-    return words[Math.floor(Math.random() * words.length)];
+if(!localStorage.getItem('size')) {
+    localStorage.setItem('size', 4);
 }
 
+// fetch the preferred word size
 
-let word = randomWord().toUpperCase();
+let word_size = parseInt(localStorage.getItem('size'));
+createBoxes(word_size);
+
+
+let boxes = Array.from(document.querySelectorAll('.box'));
+boxes[0].classList.add('selected');
+const keys = document.querySelectorAll('.key');
+const popup = document.querySelector('.popup');
+const resetBtn = document.querySelector('.play');
+
+const increaseBtn = document.querySelector('.size-inc');
+const decreaseBtn = document.querySelector('.size-dec');
+
+const settingBtn = document.querySelector('.setting-btn')
+const closePopup = document.querySelector('.close-popup');
+
+// open/close setting popup
+
+const open_setting = () => {
+    if(settingIsOpen) return;
+
+    document.querySelector('.word-length').innerText = localStorage.getItem('size');
+    document.querySelector('.setting').style.transform = 'scale(1)';
+    paused = true;
+
+    settingIsOpen = true;
+}
+
+const close_setting = () => {
+    document.querySelector('.setting').style.transform = 'scale(0)';
+    paused = false;
+
+    settingIsOpen = false;
+}
+
+settingBtn.addEventListener('click', open_setting);
+closePopup.addEventListener('click', close_setting);
+
+increaseBtn.addEventListener('click', () => {
+    let size = parseInt(document.querySelector('.word-length').innerText);
+    if(size == 5) return;
+
+    size += 1;
+    document.querySelector('.word-length').innerText = size;
+    localStorage.setItem('size', size);
+
+    reset();
+})
+
+decreaseBtn.addEventListener('click', () => {
+    let size = parseInt(document.querySelector('.word-length').innerText);
+    if(size == 3) return;
+
+    size -= 1;
+    document.querySelector('.word-length').innerText = size;
+    localStorage.setItem('size', size);
+
+    reset();
+})
+
+let paused = false;
+let settingIsOpen = false;
+let word = randomWord(word_size).toUpperCase();
 console.log(word)
 let guessWord = ''
 let guessCount = 1;
-
 let score = 12;
+let high_score = parseInt(localStorage.getItem('score'));
 
+function randomWord(size) {
+    let word_list = four_letters['words'];
+    if(size == 5) {
+        word_list = five_letters['words'];
+    } else if(size == 3) {
+        word_list = three_letters['words'];
+    }
+
+    return word_list[Math.floor(Math.random() * word_list.length)];
+}
 
 keys.forEach((key) => {
     key.addEventListener('click', (e) => {
@@ -44,7 +120,7 @@ keys.forEach((key) => {
         }
 
         if (letter == 'Enter') {
-            if (guessWord.length !== 4) return;
+            if (guessWord.length !== word_size) return;
 
             changeBoxColor();
             checkWin();
@@ -57,16 +133,14 @@ keys.forEach((key) => {
 })
 
 document.addEventListener('keyup', (event) => {
-
-    if (paused){
+    if (paused)
         return;
-    }
 
     if (event.key == 'Backspace') eraseLetter();
-    
+
     if (event.key === 'Enter') {
-        
-        if (guessWord.length !== 4) return;
+
+        if (guessWord.length !== word_size) return;
 
         changeBoxColor();
         checkWin();
@@ -98,10 +172,9 @@ function eraseLetter() {
 
 function changeBoxColor() {
     const currentActiveIndex = boxes.findIndex(getActiveBox) + 1;
-    const previousBoxes = [...boxes].slice((guessCount * 4) - 4, currentActiveIndex);
+    const previousBoxes = [...boxes].slice((guessCount * word_size) - word_size, currentActiveIndex);
 
     previousBoxes.forEach((box, ind) => {
-        console.log(box.innerText, '    ', word[ind]);
         if (box.innerText === word[ind]) {
             box.style.color = 'white';
             box.style.backgroundColor = 'green';
@@ -142,13 +215,17 @@ function checkWin() {
 
         clearInterval(interval);
 
-        paused = true;
-        showPopup('You Won !!!', `Score : ${score}`);
-
         //update score
 
-        localStorage.setItem('score', score + parseInt(localStorage.getItem('score')));
-        showScores();
+        updateScores();
+
+        paused = true;
+
+        if(high_score < parseInt(document.querySelector('.score').innerText)) {
+            showPopup('You Won !!!', `High Score : ${score}`);
+        } else {
+            showPopup('You Won !!!', `Score : ${score}`);
+        }   
 
         return true;
     }
@@ -165,9 +242,8 @@ function checkWin() {
     }
     const currentActiveInd = boxes.findIndex(getActiveBox);
     boxes[currentActiveInd].classList.remove('selected');
-    console.log(boxes[currentActiveInd]);
 
-    const activeInd = guessCount * 4;
+    const activeInd = guessCount * word_size;
     boxes[activeInd].classList.add('selected');
 
     guessWord = '';
@@ -194,8 +270,8 @@ function insertLetter(key) {
     }
 }
 
-resetBtn.addEventListener('click', () => {
-    reset();
+resetBtn.addEventListener('click', (e) => {
+    if(e.detail >= 1) reset();
 })
 
 // show popup on win or loss
@@ -210,12 +286,18 @@ function showPopup(title, message) {
 
 // display score
 
-const showScores = () => {
-    const scoreTag = document.querySelector('.score')
-    scoreTag.innerText = localStorage.getItem('score');
+const updateScores = () => {
+    const prevScore = parseInt(document.querySelector('.score').innerText)
+    score = prevScore + score;
+
+    document.querySelector('.score').innerText = score;
+
+    if(high_score < score) {
+        localStorage.setItem('score', score + parseInt(localStorage.getItem('score')));
+        console.log('new high score = ',score);
+    }
 }
 
-showScores()
 // start timer
 
 let interval = null;
@@ -228,8 +310,9 @@ const startTimer = () => {
     const timer_val = timer.querySelector('.circle');
     timer_val.innerText = '1:00';
     
-
     interval = setInterval(() => {
+        if(paused) return;
+
         timer.style.background = `conic-gradient(rgb(236, 181, 15) ${(60 - countdown) * 6}deg, rgb(47, 45, 45) 0deg)`;
 
         timer_val.innerText = `0:${countdown}`;
@@ -237,6 +320,9 @@ const startTimer = () => {
 
 
         if (countdown < 0) {
+            if(settingIsOpen) {
+                close_setting();
+            }
             showPopup('Times up !!!', `The correct word was ${word}`);
 
             timer_val.innerText = `0:00`;
@@ -247,19 +333,29 @@ const startTimer = () => {
 
 startTimer();
 
+
 // reset the game
 
 const reset = () => {
     clearInterval(interval);
-    paused = false;
 
-    word = randomWord().toUpperCase();
-    console.log(word)
+    paused = false;
+    settingIsOpen = false;
     guessWord = ''
     guessCount = 1;
     score = 12;
+    high_score = parseInt(localStorage.getItem('score'));
+
+    word_size = parseInt(localStorage.getItem('size'));
+
+    word = randomWord(word_size).toUpperCase();
+    console.log(word)
+
+    createBoxes(word_size);
 
     popup.style.transform = 'scale(0)';
+
+    boxes = Array.from(document.querySelectorAll('.box'));
 
     keys.forEach((k) => { 
         k.style.backgroundColor = 'black';
@@ -274,7 +370,7 @@ const reset = () => {
             box.classList.remove('selected');
         }
     })
-
     boxes[0].classList.add('selected');
+
     startTimer();
 }

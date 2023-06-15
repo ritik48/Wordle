@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordle</title>
     <style>
         :root {
             font-size: 10px;
@@ -135,7 +134,7 @@
             box-shadow: 0 0 5px 1px rgb(240, 236, 29);
         }
 
-        .popup {
+        .popup, .setting {
             position: absolute;
             background-color: rgba(84, 84, 84, 0.707);
             inset: 0;
@@ -143,7 +142,99 @@
             transform: scale(0);
 
             transition: 0.25s all ease-in-out;
+        }
+        /* .setting {
+            transform: scale(1);
+        } */
+        .setting .container {
+            width: fit-content;
+            background-color: black;
 
+            display: flex;
+            flex-direction: column;
+
+            gap: 10px;
+
+            justify-content: center;
+            align-items: center;
+
+            margin: 0 auto;
+
+            margin-top: 150px;
+
+            color: white;
+            padding: 20px 20px;
+            border-radius: 10px;
+
+            box-shadow: 0 0 5px 0 rgba(181, 178, 178, 0.629);
+        }
+        .setting button.reset-score {
+            border: none;
+            color: white;
+
+            font-size: 2rem;
+            padding: 0.2em 0.55em;
+            border-radius: 5px;
+
+            background-color: rgb(18, 85, 85);
+            cursor: pointer;
+
+            transition: 0.07s all ease-in-out;
+        }
+        .setting button:active {
+            transform: translate(1px, 1px);
+        }
+
+        .setting .cont {
+            display: flex;
+            gap: 10px;
+
+            align-items: center;
+
+            font-size: 1.8rem;
+        }
+
+        .setting .cont div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .setting .size-icon {
+            width: 30px;
+            cursor: pointer;
+
+            transition: 0.05s all ease-in-out;
+        }
+        .size-icon:active {
+            transform: translate(1px,1px);
+        }
+        
+        .setting p {
+            color: rgb(13, 231, 13);
+        }
+
+        .close-popup {
+            align-self: flex-end;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            box-shadow: 0 0 5px 0 rgb(184, 181, 181);
+            
+
+            background-color: rgb(255, 0, 0) !important;
+        }
+        .reset-score {
+            width: 100%;
+
+            margin-top: 10px;
+        }
+
+        .setting button:hover {
+            opacity: 0.6;
         }
 
         .popup .container {
@@ -170,6 +261,10 @@
             /* margin: 0px auto; */
         }
 
+        .popup h2 {
+            color: rgb(210, 174, 14);
+        }
+
         .popup .container button {
             border: none;
 
@@ -181,8 +276,10 @@
 
             background-color: aqua;
             cursor: pointer;
+            /* pointer-events: none; */
 
             transition: 0.2s all ease-in-out;
+            
         }
         
         .popup .container button:hover {
@@ -269,6 +366,7 @@
                 font-size: 1.5rem;
             }
         }
+
     </style>
 </head>
 
@@ -288,30 +386,7 @@
     
     <main>
         <div class="box-container">
-            <div class="box selected"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
+            
         </div>
         <div class="key-container">
             <div class="key">A</div>
@@ -345,12 +420,6 @@
         </div>
     </main>
 
-    <footer>
-        <p>Score : <span class="score"></span></p>
-    </footer>
-
-
-
     <div class="popup">
         <div class="container">
             <h2>You Won !!!</h2>
@@ -358,6 +427,32 @@
             <button class="play">Play Again</button>
         </div>
     </div>
+
+    <div class="setting">
+        <div class="container">
+            
+            <button class="close-popup"></button>
+            <div class="cont">
+                <p>Word size </p>
+                <div>
+                    <img src="./assets/decrease.png" class="size-icon size-dec" alt="">                    
+                    <span class="word-length">4</span>
+                    <img src="./assets/increase.png" class="size-icon size-inc" alt="">
+                </div>
+            </div>
+            <div class="cont">
+                <p>High Score</p>
+                <span class="high-score">20</span>
+            </div>
+            <button class="reset-score">Reset score</button>
+        </div>
+        
+    </div>
+
+    <footer>
+        <p>Score : <span class="score">0</span></p>
+    </footer>
+
     <script type="module" src="game.js"></script>
 </body>
 
