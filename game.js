@@ -1,6 +1,16 @@
-import four_letters from "./word_files/four_letters.json" assert { type: "json" };
-import five_letters from "./word_files/five_letters.json" assert { type: "json" };
-import three_letters from "./word_files/three_letters.json" assert { type: "json" };
+let four_letters, five_letters, three_letters;
+
+async function loadJSON() {
+    four_letters = await fetch("./word_files/four_letters.json").then((res) =>
+        res.json()
+    );
+    five_letters = await fetch("./word_files/five_letters.json").then((res) =>
+        res.json()
+    );
+    three_letters = await fetch("./word_files/three_letters.json").then((res) =>
+        res.json()
+    );
+}
 
 const createBoxes = (size) => {
     document.querySelector(".box-container").innerText = "";
@@ -25,10 +35,11 @@ if (!localStorage.getItem("size")) {
     localStorage.setItem("size", 4);
 }
 
-// fetch the preferred word size
+await loadJSON();
 
 let word_size = parseInt(localStorage.getItem("size"));
 createBoxes(word_size);
+document.querySelector(".key-container").style.display="flex"
 
 let boxes = Array.from(document.querySelectorAll(".box"));
 boxes[0].classList.add("selected");
